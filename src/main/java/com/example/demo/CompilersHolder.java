@@ -1,8 +1,6 @@
 package com.example.demo;
 
 import com.example.demo.compilers.MessageCompiler;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -12,20 +10,24 @@ import java.net.URL;
 
 @Component
 public class CompilersHolder {
-    public CompilersHolder(@Qualifier("ig-reels")MessageCompiler igReelsCompiler,
+    public CompilersHolder(@Qualifier("ig-reels") MessageCompiler igReelsCompiler,
 
-                           @Qualifier("ig-posts")MessageCompiler igPostsCompiler) {
+                           @Qualifier("ig-posts") MessageCompiler igPostsCompiler,
+
+                           @Qualifier("ig-stories") MessageCompiler igStoriesCompiler) {
         this.igReelsCompiler = igReelsCompiler;
         this.igPostsCompiler = igPostsCompiler;
+        this.igStoriesCompiler = igStoriesCompiler;
     }
 
 
     private final MessageCompiler igReelsCompiler;
 
     private final MessageCompiler igPostsCompiler;
+    private final MessageCompiler igStoriesCompiler;
 
     private boolean validURL(String link){
-        if (!link.contains("www")) return false;
+        if (!link.contains(".")) return false;
         try {
             URL url = new URL(link);
             url.toURI();
@@ -42,8 +44,9 @@ public class CompilersHolder {
             return igReelsCompiler;
         }
         else if (link.contains("instagram.com/p")) {
-            System.out.println("asda");
             return igPostsCompiler;
+        } else if (link.contains("instagram.com/stories")) {
+            return igStoriesCompiler;
         }
 
         return null;
